@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Dino Rescue</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="cssdinorescue.css">
+</head>
+<body class="container mt-5">
+
+    <h2 class="text-center">Dino Rescue</h2>
+    <h3 class="text-center">Step: <span id="Step">0</span></h3>
+    
+    <!-- Introduksi Game -->
+    <div class="jumbotron">
+        <h1 class="display-4">Selamat datang di Dino Rescue!</h1>
+        <p class="lead">Bantu dinosaurus untuk menyelamatkan diri dari  kotak bom. Gunakan spasi untuk melompat dan hindari tabrakan!</p>
+        <hr class="my-4">
+        <p>Setiap langkah yang Anda ambil akan tercatat. Berapa langkah yang dapat Anda capai sebelum permainan berakhir?</p>
+
+    <div id="board" style="background-position: 0px;">
+        <div id="area">
+            <div id="dino"></div>
+            <div id="bom" style="margin-left: 600px;"></div>
+        </div>
+        
+    </div>
+
+    <script type="text/javascript">
+        var isMoving = true;
+
+        function setBacgroundMoving() {
+            if (isMoving == true) {
+                setTimeout(function() {
+                    var bg = document.getElementById('board');
+                    bg.style.backgroundPosition = (parseInt(bg.style.backgroundPosition.replace('px', '')) - 1) + 'px';
+
+                    document.getElementById('Step').innerHTML = parseInt(document.getElementById('Step').innerHTML) + 1;
+
+                    setBacgroundMoving();
+                }, 5);
+            }
+        }
+
+        setBacgroundMoving();
+
+        function setBomMoving() {
+            var bom = document.getElementById('bom'),
+                dino = document.getElementById('dino');
+
+            setTimeout(function() {
+                bom.style.marginLeft = (parseInt(bom.style.marginLeft.replace('px', '')) - 1) + 'px';
+
+                if (parseInt(bom.style.marginLeft.replace('px', '')) < -100) {
+                    bom.style.marginLeft = "500px";
+                }
+
+                if (dino.offsetTop + 50 >= bom.offsetTop &&
+                    dino.offsetLeft + 50 >= bom.offsetLeft &&
+                    dino.offsetTop + 50 <= bom.offsetTop + 50 &&
+                    dino.offsetLeft <= bom.offsetLeft + 50) {
+                    alert('game over, Step anda : ' + document.getElementById('Step').innerHTML);
+                    dino.setAttribute('class', 'diem');
+                    isMoving = false;
+                } else {
+                    setBomMoving();
+                }
+
+            }, 5);
+        }
+
+        setBomMoving();
+
+        window.addEventListener('keyup', function(e) {
+            if (e.keyCode == 32) {
+                document.getElementById('dino').style.marginTop = "40px";
+                document.getElementById('dino').setAttribute('class', 'diem');
+
+                setTimeout(function() {
+                    document.getElementById('dino').style.marginTop = "160px";
+                    document.getElementById('dino').setAttribute('class', '');
+                }, 1000);
+            }
+        });
+
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>
